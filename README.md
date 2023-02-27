@@ -2,6 +2,12 @@
 
 Fixes crosshairs to be actually representative of spread, taking your FOV into account.
 
+# Installation
+
+Drop the crosshairs_fix folder into your mods folder. Add "crosshairs_fix" to your mod_load_order.txt
+
+# Math
+
 Original crosshairs equation:
 
     spread_in_degrees * 10
