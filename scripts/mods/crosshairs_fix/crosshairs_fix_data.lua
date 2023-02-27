@@ -1,7 +1,7 @@
-local mod = get_mod("Crosshairs Fix")
+local mod = get_mod("crosshairs_fix")
 
 return {
-	name = "Crosshairs Fix",
+	name = "crosshairs_fix",
 	description = mod:localize("mod_description"),
 	is_togglable = true,
 }
