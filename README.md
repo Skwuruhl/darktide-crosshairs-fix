@@ -16,4 +16,4 @@ Result is the number of pixels your crosshair is placed from the screen, scaled 
 
 New equation:
 
-    540 * tan(spread) / tan(current_fov / 2)
+    540 * tan(spread) / tan(current_vertical_fov / 2)
