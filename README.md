@@ -14,7 +14,7 @@ Original crosshairs equation:
 
     spread_in_degrees * 10
 
-Result is the number of pixels your crosshair is placed from the screen, scaled from 1080p as baseline.
+Result is the number of pixels your crosshair is placed from the center of the screen, scaled from 1080p as baseline.
 
 New equation:
 
