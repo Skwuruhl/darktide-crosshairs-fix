@@ -1,7 +1,6 @@
 return {
 	mod_name = {
 		en = "Crosshairs Fix",
-		ru = "Исправление: перекрестия",
 	},
 	mod_description = {
 		en = "Fixes crosshairs to be actually representative of spread, taking your FOV into account.",
