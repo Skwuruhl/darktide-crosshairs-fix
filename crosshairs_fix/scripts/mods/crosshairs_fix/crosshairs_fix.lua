@@ -18,8 +18,8 @@ mod.spread_yaw_pitch = function(yaw, pitch)
 	return yaw, pitch
 end
 
-mod:hook(assault, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(assault, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -37,8 +37,8 @@ mod:hook(assault, "update_function", function(func, parent, ui_renderer, widget,
 	end
 end)
 
-mod:hook(bfg, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(bfg, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -57,8 +57,8 @@ mod:hook(bfg, "update_function", function(func, parent, ui_renderer, widget, tem
 	end
 end)
 
-mod:hook(cross, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(cross, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -77,8 +77,8 @@ mod:hook(cross, "update_function", function(func, parent, ui_renderer, widget, t
 	end
 end)
 
-mod:hook(projectile_drop, "update_function" , function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(projectile_drop, "update_function" , function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -95,8 +95,8 @@ mod:hook(projectile_drop, "update_function" , function(func, parent, ui_renderer
 	end
 end)
 
-mod:hook(shotgun_slug, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(shotgun_slug, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -115,8 +115,8 @@ mod:hook(shotgun_slug, "update_function", function(func, parent, ui_renderer, wi
 	end
 end)
 
-mod:hook(shotgun_wide, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(shotgun_wide, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -135,8 +135,8 @@ mod:hook(shotgun_wide, "update_function", function(func, parent, ui_renderer, wi
 	end
 end)
 
-mod:hook(shotgun, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(shotgun, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
@@ -155,8 +155,8 @@ mod:hook(shotgun, "update_function", function(func, parent, ui_renderer, widget,
 	end
 end)
 
-mod:hook(spray_n_pray, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
-	func(parent, ui_renderer, widget, template, dt, t)
+mod:hook(spray_n_pray, "update_function", function(func, parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
+	func(parent, ui_renderer, widget, crosshair_template, crosshair_settings, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
 		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
