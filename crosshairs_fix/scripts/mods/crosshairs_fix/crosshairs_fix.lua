@@ -8,21 +8,21 @@ local shotgun_wide = require("scripts/ui/hud/elements/crosshair/templates/crossh
 local shotgun = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_shotgun")
 local spray_n_pray = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_spray_n_pray")
 
-mod:hook(CLASS.HudElementCrosshair, "_spread_yaw_pitch", function(func, self)
-	local yaw, pitch = func(self)
+mod.spread_yaw_pitch = function(yaw, pitch)
 	local local_player = Managers.player:local_player(1)
-	if yaw and pitch and local_player then
+	if local_player then
 		local current_fov = Managers.state.camera:fov(local_player.viewport_name) or 1
 		yaw = 540 * math.tan(math.rad(yaw))/math.tan(current_fov/2)
 		pitch = 540 * math.tan(math.rad(pitch))/math.tan(current_fov/2)
 	end
 	return yaw, pitch
-end)
+end
 
 mod:hook(assault, "update_function", function(func, parent, ui_renderer, widget, template, dt, t)
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local up_style = widget.style.up
 		local left_style = widget.style.bottom_left
 		local right_style = widget.style.bottom_right
@@ -41,6 +41,7 @@ mod:hook(bfg, "update_function", function(func, parent, ui_renderer, widget, tem
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local up_style = widget.style.up
 		local down_style = widget.style.down
 		local left_style = widget.style.left
@@ -60,6 +61,7 @@ mod:hook(cross, "update_function", function(func, parent, ui_renderer, widget, t
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local up_style = widget.style.up
 		local down_style = widget.style.down
 		local left_style = widget.style.left
@@ -79,6 +81,7 @@ mod:hook(projectile_drop, "update_function" , function(func, parent, ui_renderer
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local left_style = widget.style.left
 		local right_style = widget.style.right
 		local styles = {right_style, left_style}
@@ -96,6 +99,7 @@ mod:hook(shotgun_slug, "update_function", function(func, parent, ui_renderer, wi
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local up_style = widget.style.up
 		local down_style = widget.style.down
 		local left_style = widget.style.left
@@ -115,6 +119,7 @@ mod:hook(shotgun_wide, "update_function", function(func, parent, ui_renderer, wi
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local up_left_style = widget.style.up_left
 		local up_right_style = widget.style.up_right
 		local bottom_left_style = widget.style.bottom_left
@@ -134,6 +139,7 @@ mod:hook(shotgun, "update_function", function(func, parent, ui_renderer, widget,
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local up_left_style = widget.style.up_left
 		local up_right_style = widget.style.up_right
 		local bottom_left_style = widget.style.bottom_left
@@ -153,6 +159,7 @@ mod:hook(spray_n_pray, "update_function", function(func, parent, ui_renderer, wi
 	func(parent, ui_renderer, widget, template, dt, t)
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 	if yaw and pitch then
+		yaw, pitch = mod.spread_yaw_pitch(yaw, pitch)
 		local left_style = widget.style.left
 		local right_style = widget.style.right
 		local styles = {right_style, left_style}
