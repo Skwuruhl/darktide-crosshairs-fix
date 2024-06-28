@@ -26,7 +26,7 @@ Also applied to assault crosshair.
 
 Custom crosshairs (from Crosshair Remap or similar) should use a SPREAD_DISTANCE value of 10 and, as vanilla crosshairs have been updated to do, use horizontal_alignment and vertical_alignment of "center". If your crosshair has no diagonal segments this is all you need to do. Though you can still use the function for non-diagonal crosshairs to do things with a for loop instead of manually doing each segment of the crosshair. See example_crosshair.lua for examples of what I mean.
 
-If want diagonal crosshairs use the diagonal_coordinates function to get x, y coordinates. Check example_crosshair.lua for a rough example of how to use.
+If you want diagonal crosshairs then use the diagonal_coordinates function to get x, y coordinates. Check example_crosshair.lua for a rough example of how to use the function.
 
 ## diagonal_coordinates(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 
