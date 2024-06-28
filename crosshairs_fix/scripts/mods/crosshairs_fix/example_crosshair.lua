@@ -1,11 +1,5 @@
-mod:hook(assault_new, "create_widget_defintion", function(func, template, scenegraph_id)
-	local widget = func(template, scenegraph_id)
-	widget.style.top.angle = widget.style.top.angle + math.rad(45)
-	widget.style.bottom.angle = widget.style.bottom.angle + math.rad(45)
-	widget.style.left.angle = widget.style.left.angle + math.rad(45)
-	widget.style.right.angle = widget.style.right.angle + math.rad(45)
-	return widget
-end)
+local crosshair_fix = get_mod("crosshairs_fix")
+local Crosshair = require("scripts/ui/utilities/crosshair")
 
 mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
@@ -20,25 +14,25 @@ mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, wi
 		local x, y
 
 		local top_style = style.top
-		x, y = mod.diagonal_coordinates(spread_offset_x, spread_offset_y, top_style.angle, top_style.size[1]/2)
+		x, y = crosshair_fix.diagonal_coordinates(spread_offset_x, spread_offset_y, top_style.angle, top_style.size[1]/2)
 
 		top_style.offset[1] = x
 		top_style.offset[2] = y
 
 		local bottom_style = style.bottom
-		x, y = mod.diagonal_coordinates(spread_offset_x, spread_offset_y, bottom_style.angle, bottom_style.size[1]/2)
+		x, y = crosshair_fix.diagonal_coordinates(spread_offset_x, spread_offset_y, bottom_style.angle, bottom_style.size[1]/2)
 
 		bottom_style.offset[1] = x
 		bottom_style.offset[2] = y
 
 		local left_style = style.left
-		x, y = mod.diagonal_coordinates(spread_offset_x, spread_offset_y, left_style.angle, left_style.size[1]/2)
+		x, y = crosshair_fix.diagonal_coordinates(spread_offset_x, spread_offset_y, left_style.angle, left_style.size[1]/2)
 
 		left_style.offset[1] = x
 		left_style.offset[2] = y
 
 		local right_style = style.right
-		x, y = mod.diagonal_coordinates(spread_offset_x, spread_offset_y, right_style.angle, right_style.size[1]/2)
+		x, y = crosshair_fix.diagonal_coordinates(spread_offset_x, spread_offset_y, right_style.angle, right_style.size[1]/2)
 
 		right_style.offset[1] = x
 		right_style.offset[2] = y
