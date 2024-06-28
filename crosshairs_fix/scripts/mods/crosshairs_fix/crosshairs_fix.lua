@@ -17,12 +17,13 @@ end
 
 --most templates multiply pitch and yaw by 10, and apply_fov_to_crosshair by 37. The result is 370 but needs to be 540, the number of pixels from center of crosshair to top of screen with a 1080p monitor.
 mod:hook(fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
-	func(pitch, yaw)
-	local correction = 54/37
-	local corrected_pitch = pitch * correction
-	local corrected_yaw = yaw * correction
+	pitch, yaw = func(pitch, yaw)
 
-	return corrected_pitch, corrected_yaw
+	local correction = 54/37
+	pitch = pitch * correction
+	yaw = yaw * correction
+
+	return pitch, yaw
 end)
 
 mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
