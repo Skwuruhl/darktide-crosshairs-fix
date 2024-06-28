@@ -3,14 +3,15 @@ local fov = require("scripts/utilities/camera/fov")
 local assault_new = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault_new")
 local Crosshair = require("scripts/ui/utilities/crosshair")
 
---supplied with pitch and yaw of spread and the angle of a crosshair segment, returns y and x coordinates adjusted for the rotation.
---minimum_offset is the mininum number of 1080 pixels the returned y, x should be from center. optional
---texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. As usual for lua all angles should be supplied in radians.
-mod.idk_what_to_call_this = function(x, y, angle, crosshair_size, minimum_offset, texture_rotation)
+--supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
+--minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional
+--texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional.
+--As usual for lua all angles should be supplied in radians.
+mod.diagonal_coordinates = function(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 	minimum_offset = minimum_offset or 0
 	texture_rotation = texture_rotation or 0
-	x = math.cos(angle - texture_rotation) * (math.max(x, minimum_offset) + crosshair_size/2)
-	y = -math.sin(angle - texture_rotation) * (math.max(y, minimum_offset) + crosshair_size/2)
+	x = math.cos(angle - texture_rotation) * (math.max(x, minimum_offset) + half_crosshair_size)
+	y = -math.sin(angle - texture_rotation) * (math.max(y, minimum_offset) + half_crosshair_size)
 	return x, y
 end
 
