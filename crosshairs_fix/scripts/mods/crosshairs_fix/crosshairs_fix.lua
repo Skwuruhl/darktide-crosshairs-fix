@@ -7,11 +7,11 @@ local Crosshair = require("scripts/ui/utilities/crosshair")
 --minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional
 --texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional.
 --As usual for lua all angles should be supplied in radians.
-mod.diagonal_coordinates = function(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
+mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 	minimum_offset = minimum_offset or 0
 	texture_rotation = texture_rotation or 0
-	x = math.cos(angle - texture_rotation) * (math.max(x, minimum_offset) + half_crosshair_size)
-	y = -math.sin(angle - texture_rotation) * (math.max(y, minimum_offset) + half_crosshair_size)
+	x = math.cos(angle + texture_rotation) * (math.max(x, minimum_offset) + half_crosshair_size)
+	y = -math.sin(angle + texture_rotation) * (math.max(y, minimum_offset) + half_crosshair_size)
 	return x, y
 end
 
