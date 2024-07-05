@@ -1,6 +1,6 @@
 # Darktide Crosshairs Fix
 
-Darktide 1.4 fixed most issues with crosshairs but a few remain. Mod fixes remaining issues. Additionally the mod now has a function that custom crosshairs can use to properly have diagonal segements.
+Darktide 1.4 fixed most issues with crosshairs but a few remain. Mod fixes remaining issues. Additionally the mod now has a function that custom crosshairs can use to properly have diagonal segments.
 
 [Nexus Mods](https://www.nexusmods.com/warhammer40kdarktide/mods/36)
 
@@ -30,12 +30,12 @@ If you want diagonal crosshairs then use the crosshair_rotation function to get 
 
 ## crosshair_rotation(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 
-supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
+* supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
 
-half_crosshair_size is what it says. Be sure to use the correct dimension. Not optional.
+* half_crosshair_size is what it says. Be sure to use the correct dimension. Not optional.
 
-minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional.
+* minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional.
 
-texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional.
+* texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional.
 
-As usual for lua all angles should be supplied in radians.
+* As usual for lua all angles should be supplied in radians.
