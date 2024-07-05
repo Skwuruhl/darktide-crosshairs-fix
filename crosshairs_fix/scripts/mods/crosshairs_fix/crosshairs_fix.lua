@@ -10,8 +10,8 @@ local Crosshair = require("scripts/ui/utilities/crosshair")
 mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 	minimum_offset = minimum_offset or 0
 	texture_rotation = texture_rotation or 0
-	x = math.cos(angle + texture_rotation) * (math.max(x, minimum_offset) + half_crosshair_size)
-	y = -math.sin(angle + texture_rotation) * (math.max(y, minimum_offset) + half_crosshair_size)
+	x = math.cos(angle + texture_rotation) * math.max(x + half_crosshair_size, minimum_offset)
+	y = -math.sin(angle + texture_rotation) * math.max(y + half_crosshair_size, minimum_offset)
 	return x, y
 end
 
