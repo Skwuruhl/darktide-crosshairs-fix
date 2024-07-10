@@ -1,5 +1,7 @@
 # Darktide Crosshairs Fix
 
+## Note: Further development moved to [Better Crosshairs](https://github.com/Skwuruhl/darktide-better-crosshairs)
+
 Darktide 1.4 fixed most issues with crosshairs but a few remain. Mod fixes remaining issues. Additionally the mod now has a function that custom crosshairs can use to properly have diagonal segments.
 
 [Nexus Mods](https://www.nexusmods.com/warhammer40kdarktide/mods/36)
@@ -39,3 +41,4 @@ If you want diagonal crosshairs then use the crosshair_rotation function to get 
 * texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional.
 
 * As usual for lua all angles should be supplied in radians.
+ 
