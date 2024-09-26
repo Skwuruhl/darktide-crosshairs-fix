@@ -2,7 +2,7 @@ local crosshairs_fix = get_mod("crosshairs_fix")
 local Crosshair = require("scripts/ui/utilities/crosshair")
 
 -- manual example
-mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
+mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
@@ -43,7 +43,7 @@ mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, wi
 end)
 
 -- for loop example
-mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
+mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)

@@ -1,6 +1,6 @@
 local mod = get_mod("crosshairs_fix")
 local fov = require("scripts/utilities/camera/fov")
-local assault_new = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault_new")
+local assault = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault")
 local Crosshair = require("scripts/ui/utilities/crosshair")
 
 --supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
@@ -28,7 +28,7 @@ end)
 
 --assault is the only template that has a multiplier of 15 instead of 10.
 --I tried to fix this without hook_origin but I couldn't get it to work. Only thing this hook changes is SPREAD_DISTANCE 15 to 10
-mod:hook_origin(assault_new, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
+mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
