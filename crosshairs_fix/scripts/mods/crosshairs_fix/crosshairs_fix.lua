@@ -188,36 +188,21 @@ mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
-	local SPREAD_DISTANCE = 10
 
 	if yaw and pitch then
-		local scalar = SPREAD_DISTANCE * (crosshair_settings.spread_scalar or 1)
+		local scalar = 10 * (crosshair_settings.spread_scalar or 1)
 		local spread_offset_y = pitch * scalar
 		local spread_offset_x = yaw * scalar
+		local styles = {style.top, style.bottom, style.left, style.right}
+		for k,v in pairs(styles) do
+			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
+			v.offset[1], v.offset[2] = mod.crosshair_rotation(spread_offset_x, spread_offset_y, v.angle, half_size_x, half_size_x+half_size_y)
+		end
+	end
 
-		local top_style = style.top
-		local top_size = top_style.size[1]
+	Crosshair.update_hit_indicator(style, hit_progress, hit_color, hit_weakspot, draw_hit_indicator)
+end)
 
-		top_style.offset[1] = 0
-		top_style.offset[2] = math.min(-spread_offset_y - top_size/2, -top_size/2-2)
-
-		local bottom_style = style.bottom
-		local bottom_size = bottom_style.size[1]
-
-		bottom_style.offset[1] = 0
-		bottom_style.offset[2] = math.max(spread_offset_y + bottom_size/2, bottom_size/2+2)
-
-		local left_style = style.left
-		local left_size = left_style.size[1]
-
-		left_style.offset[1] = math.min(-spread_offset_x - left_size/2, -left_size/2-2)
-		left_style.offset[2] = 0
-
-		local right_style = style.right
-		local right_size = right_style.size[1]
-
-		right_style.offset[1] = math.max(spread_offset_x + right_size/2, right_size/2+2)
-		right_style.offset[2] = 0
 mod:hook_safe("HudElementCrosshair", "init", function(self, parent, draw_layer, start_scale, definitions)
 	local scenegraph_id = "pivot"
 	for _, template_path in pairs(template_paths) do
