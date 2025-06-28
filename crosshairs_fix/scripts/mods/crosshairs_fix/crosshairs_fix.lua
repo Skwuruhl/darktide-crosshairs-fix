@@ -28,6 +28,13 @@ mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offs
 	return x, y
 end
 
+mod.get_active_shotshell = function()
+	if mod.inventory_slot_component and mod.inventory_slot_component.special_active and mod.shotshell_special then
+		return mod.shotshell_special
+	else
+		return mod.shotshell
+	end
+end
 mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self)
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
