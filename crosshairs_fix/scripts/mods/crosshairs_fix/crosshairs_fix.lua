@@ -35,6 +35,54 @@ mod.get_active_shotshell = function()
 		return mod.shotshell
 	end
 end
+
+-- I don't wanna run this every frame but I don't wanna delete it so I'm commenting instead
+-- mod.get_active_shotshell = function(unit_data_extension)
+-- 	if not unit_data_extension then
+-- 		local player = Managers.player:local_player_safe(1)
+-- 		if player then
+-- 			unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
+-- 		end
+-- 	end
+-- 	local weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+-- 	if weapon_action_component then
+-- 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+-- 		if weapon_template then
+-- 			local current_action_name, action_settings = Action.current_action(weapon_action_component, weapon_template)
+-- 			mod:echo(current_action_name ~= "none" and action_settings.name or "no_action")
+-- 			local fire_configuration
+-- 			if current_action_name ~= "none" then
+-- 				for k,v in pairs(action_settings.allowed_chain_actions) do
+-- 					if string.find(k, "shoot") then
+-- 						fire_configuration = weapon_template.actions[v.action_name].fire_configuration
+-- 						break
+-- 					end
+-- 				end
+-- 			end
+-- 			if not fire_configuration then
+-- 				local fallback_action = weapon_template.actions.action_shoot_hip
+-- 				if fallback_action then
+-- 					fire_configuration = fallback_action.fire_configuration
+-- 				end
+-- 			end
+-- 			if fire_configuration then
+-- 				local inventory_component = unit_data_extension:read_component("inventory")
+-- 				local wielded_slot = inventory_component.wielded_slot
+-- 				local slot_type = PlayerCharacterConstants.slot_configuration[wielded_slot].slot_type
+-- 				if slot_type == "weapon" then
+-- 					local inventory_slot_component = unit_data_extension:read_component(inventory_component.wielded_slot)
+-- 					mod:echo(inventory_slot_component.special_active)
+-- 					if inventory_slot_component.special_active then
+-- 						return fire_configuration.shotshell_special
+-- 					else
+-- 						return fire_configuration.shotshell
+-- 					end
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- end
+
 mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self)
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
