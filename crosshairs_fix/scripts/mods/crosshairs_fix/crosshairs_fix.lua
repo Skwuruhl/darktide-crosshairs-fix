@@ -16,6 +16,41 @@ mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offs
 	return x, y
 end
 
+mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
+	local handler_data = self._registered_components[id]
+	local component = handler_data.component
+	local weapon_template = WeaponTemplate.current_weapon_template(component)
+	if weapon_template then
+		local actions = weapon_template.actions
+		local fire_configuration
+		for k,v in pairs(action_settings.allowed_chain_actions) do
+			if string.find(k,"shoot") then
+				fire_configuration = actions[v.action_name].fire_configuration
+				break
+			end
+		end
+		if not fire_configuration then
+			local fallback_action = actions.action_shoot_hip
+			if fallback_action then
+				fire_configuration = fallback_action.fire_configuration
+			end
+		end
+		if fire_configuration then
+			mod.shotshell = fire_configuration.shotshell
+			mod.shotshell_special = fire_configuration.shotshell_special
+			local inventory_component = self._inventory_component
+			local wielded_slot = inventory_component.wielded_slot
+			if PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon") then
+				mod.inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
+			end
+		else
+			mod.shotshell = nil
+			mod.shotshell_special = nil
+			mod.inventory_slot_component = nil
+		end
+	end
+end)
+
 --most templates multiply pitch and yaw by 10, and apply_fov_to_crosshair by 37. The result is 370 but needs to be 540, the number of pixels from center of crosshair to top of screen with a 1080p monitor.
 mod:hook(fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
 	pitch, yaw = func(pitch, yaw)
