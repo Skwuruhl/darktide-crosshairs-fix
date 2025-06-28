@@ -2,6 +2,18 @@ local mod = get_mod("crosshairs_fix")
 local fov = require("scripts/utilities/camera/fov")
 local assault = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault")
 local Crosshair = require("scripts/ui/utilities/crosshair")
+local function _spread_settings(weapon_extension, movement_state_component)
+	local spread_template = weapon_extension:spread_template()
+
+	if not spread_template then
+		return nil
+	end
+
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local spread_settings = spread_template[weapon_movement_state]
+
+	return spread_settings
+end
 
 --supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
 --minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional
@@ -15,6 +27,55 @@ mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offs
 	y = math.sin(angle - texture_rotation) * math.max(y + half_crosshair_size, minimum_offset)
 	return x, y
 end
+
+mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self)
+	local parent = self._parent
+	local player_extensions = parent:player_extensions()
+
+	if player_extensions then
+		local unit_data_extension = player_extensions.unit_data
+		local buff_extension = player_extensions.buff
+		local yaw, pitch
+
+		if unit_data_extension then
+			local spread_component = unit_data_extension:read_component("spread")
+			local suppression_component = unit_data_extension:read_component("suppression")
+
+			yaw = spread_component.yaw
+			pitch = spread_component.pitch
+
+			if buff_extension then
+				local stat_buffs = buff_extension:stat_buffs()
+				local modifier = stat_buffs.spread_modifier or 1
+
+				yaw = yaw * modifier
+				pitch = pitch * modifier
+			end
+
+			pitch, yaw = Suppression.apply_suppression_offsets_to_spread(suppression_component, pitch, yaw)
+			local weapon_extension = player_extensions.weapon
+			local movement_state_component = unit_data_extension:read_component("movement_state")
+			local shooting_status_component = unit_data_extension:read_component("shooting_status")
+			local spread_settings = _spread_settings(weapon_extension, movement_state_component)
+			if spread_settings then
+				local randomized_spread = spread_settings.randomized_spread or {}
+				local min_spread_ratio = randomized_spread.min_ratio or 0.25
+				local random_spread_ratio = randomized_spread.random_ratio or 0.75
+				local first_shot = shooting_status_component.num_shots == 0
+				if first_shot then
+					min_spread_ratio = randomized_spread.first_shot_min_ratio or 0.25
+					random_spread_ratio = randomized_spread.first_shot_random_ratio or 0.4
+				end
+				local multiplier = min_spread_ratio + random_spread_ratio
+				pitch = pitch * multiplier
+				yaw = yaw * multiplier
+			end
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+		end
+
+		return yaw, pitch
+	end
+end)
 
 mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
 	local handler_data = self._registered_components[id]
