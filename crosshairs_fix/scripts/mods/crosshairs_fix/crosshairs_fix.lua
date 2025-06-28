@@ -150,13 +150,11 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 	if weapon_template then
 		local actions = weapon_template.actions
 		local fire_configuration
-		local allowed_chain_actions = action_settings.allowed_chain_actions
-		if allowed_chain_actions then
-			for k,v in pairs(allowed_chain_actions) do
-				if string.find(k,"shoot") then
-					fire_configuration = actions[v.action_name].fire_configuration
-					break
-				end
+		local allowed_chain_actions =  or {}
+		for k,v in pairs(action_settings.allowed_chain_actions or {}) do
+			if string.find(k,"shoot") then
+				fire_configuration = actions[v.action_name].fire_configuration
+				break
 			end
 		end
 		if not fire_configuration then
