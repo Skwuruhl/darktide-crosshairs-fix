@@ -1,7 +1,13 @@
 local mod = get_mod("crosshairs_fix")
-local fov = require("scripts/utilities/camera/fov")
-local assault = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault")
+local Fov = require("scripts/utilities/camera/fov")
 local Crosshair = require("scripts/ui/utilities/crosshair")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local Suppression = require("scripts/utilities/attack/suppression")
+local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
+local assault = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault")
+
 local function _spread_settings(weapon_extension, movement_state_component)
 	local spread_template = weapon_extension:spread_template()
 
@@ -173,7 +179,7 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 end)
 
 --most templates multiply pitch and yaw by 10, and apply_fov_to_crosshair by 37. The result is 370 but needs to be 540, the number of pixels from center of crosshair to top of screen with a 1080p monitor.
-mod:hook(fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
+mod:hook(Fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
 	pitch, yaw = func(pitch, yaw)
 	local correction = 54/37
 	pitch = pitch and pitch * correction
