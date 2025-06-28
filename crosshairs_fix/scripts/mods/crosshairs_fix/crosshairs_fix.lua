@@ -15,6 +15,11 @@ local function _spread_settings(weapon_extension, movement_state_component)
 	return spread_settings
 end
 
+local template_paths = {
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell",
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide",
+}
+
 --supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
 --minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional
 --texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. e.g. If you add 90 deg to _crosshair_segment() to rotate the texture, then pass 90 deg to texture rotation so it undoes the rotation for the purposes of crosshair placement
@@ -213,7 +218,24 @@ mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget
 
 		right_style.offset[1] = math.max(spread_offset_x + right_size/2, right_size/2+2)
 		right_style.offset[2] = 0
+mod:hook_safe("HudElementCrosshair", "init", function(self, parent, draw_layer, start_scale, definitions)
+	local scenegraph_id = "pivot"
+	for _, template_path in pairs(template_paths) do
+		local template = mod:io_dofile(template_path)
+		local name = template.name
+		self._crosshair_templates[name] = template
+		self._crosshair_widget_definitions[name] = template.create_widget_defintion(template, scenegraph_id)
 	end
+end)
 
-	Crosshair.update_hit_indicator(style, hit_progress, hit_color, hit_weakspot, draw_hit_indicator)
+mod:hook("HudElementCrosshair", "_get_current_crosshair_type", function(func, self, crosshair_settings)
+	local crosshair_type = func(self, crosshair_settings)
+	if mod:get_active_shotshell() then
+		if crosshair_type == "shotgun" then
+			return "shotshell"
+		elseif crosshair_type == "shotgun_wide" then
+			return "shotshell_wide"
+		end
+	end
+	return crosshair_type
 end)
