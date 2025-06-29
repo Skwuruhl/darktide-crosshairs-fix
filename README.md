@@ -2,7 +2,7 @@
 
 Darktide 1.4 fixed most issues with crosshairs but a few remain. Mod fixes remaining issues. Most notably I recently discovered that the vanilla crosshairs don't include spread ratio multipliers. 
 
-Now includes shotshell pellet patterns. Modders can also read the active shotshell pattern via a function.
+Now includes shotshell pellet patterns. Modders can also read the active shotshell pattern via a function. The curved crosshairs indicate the shotshell while the diagonal crosshairs indicate where the center of the shotshell can land.
 
 Additionally the mod now has a function that custom crosshairs can use to properly have diagonal segments (e.g. through crosshair remap).
 
