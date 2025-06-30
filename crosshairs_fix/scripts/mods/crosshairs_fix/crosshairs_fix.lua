@@ -47,6 +47,10 @@ mod.get_active_shotshell = function()
 	end
 end
 
+mod.on_setting_changed = function()
+	mod.shotshell_spread_alpha = mod:get("shotshell_spread_alpha")
+end
+
 -- I don't wanna run this every frame but I don't wanna delete it so I'm commenting instead
 -- mod.get_active_shotshell = function(unit_data_extension)
 -- 	if not unit_data_extension then

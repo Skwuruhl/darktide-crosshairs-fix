@@ -26,7 +26,7 @@ local function _crosshair_segment(style_id, angle)
 				8,
 				4,
 			},
-			color = UIHudSettings.color_tint_main_1,
+			color = Color.terminal_text_header(mod.shotshell_spread_alpha, true),
 		},
 	})
 end
