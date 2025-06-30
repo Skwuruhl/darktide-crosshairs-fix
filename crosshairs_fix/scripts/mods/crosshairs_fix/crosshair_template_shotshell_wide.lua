@@ -100,7 +100,7 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
 			shotshell_pitch, shotshell_yaw = shotshell_pitch * math.sqrt(0.75), shotshell_yaw * math.sqrt(0.75)
 		end
 		shotshell_pitch, shotshell_yaw = Fov.apply_fov_to_crosshair(shotshell_pitch, shotshell_yaw)
-		local scalar = SPREAD_DISTANCE * (1 + shotshell.scatter_range or 1.1)
+		local scalar = SPREAD_DISTANCE * (1 + (shotshell.scatter_range or 0.1))
 		local spread_offset_y = shotshell_pitch * scalar
 		local spread_offset_x = shotshell_yaw * scalar
 		local styles = {style.top, style.bottom, style.left, style.right}
