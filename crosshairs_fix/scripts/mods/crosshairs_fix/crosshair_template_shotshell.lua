@@ -85,7 +85,7 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
 	local yaw, pitch = parent:_spread_yaw_pitch(dt)
 
 	if yaw and pitch then
-		local scalar = SPREAD_DISTANCE * (crosshair_settings.spread_scalar or 1) * 0.3
+		local scalar = SPREAD_DISTANCE * (crosshair_settings.spread_scalar or 1)
 		local spread_offset_y = pitch * scalar
 		local spread_offset_x = yaw * scalar
 		local styles = {style.top_left, style.top_right, style.bottom_right, style.bottom_left}
