@@ -18,6 +18,6 @@ return {
 		en = "Shotshell Spread Crosshair Alpha",
 	},
 	shotshell_spread_alpha_tooltip = {
-		en = "Alpha value of the four diagonal crosshairs indicating spread.",
+		en = "Alpha controls the opacity/transparency.",
 	},
 }
