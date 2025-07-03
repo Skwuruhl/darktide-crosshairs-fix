@@ -109,7 +109,8 @@ end
 -- 	end
 -- end
 
-mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self)
+mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, apply_fov)
+	apply_fov = apply_fov == nil or apply_fov
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 
@@ -154,64 +155,14 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self)
 				pitch = pitch * multiplier
 				yaw = yaw * multiplier
 			end
-			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+			if apply_fov then
+				pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+			end
 		end
 
 		return yaw, pitch
 	end
 end)
-
--- copy of the above function except it doesn't apply_fov_to_crosshair
-mod._spread_yaw_pitch_no_fov = function (HudElementCrosshair)
-	local parent = HudElementCrosshair._parent
-	local player_extensions = parent:player_extensions()
-
-	if player_extensions then
-		local unit_data_extension = player_extensions.unit_data
-		local buff_extension = player_extensions.buff
-		local yaw, pitch
-
-		if unit_data_extension then
-			local spread_component = unit_data_extension:read_component("spread")
-			local suppression_component = unit_data_extension:read_component("suppression")
-
-			yaw = spread_component.yaw
-			pitch = spread_component.pitch
-
-			if buff_extension then
-				local stat_buffs = buff_extension:stat_buffs()
-				local modifier = stat_buffs.spread_modifier or 1
-
-				yaw = yaw * modifier
-				pitch = pitch * modifier
-			end
-
-			pitch, yaw = Suppression.apply_suppression_offsets_to_spread(suppression_component, pitch, yaw)
-			local weapon_extension = player_extensions.weapon
-			local movement_state_component = unit_data_extension:read_component("movement_state")
-			local shooting_status_component = unit_data_extension:read_component("shooting_status")
-			local spread_settings
-			if weapon_extension and movement_state_component then
-				spread_settings = _spread_settings(weapon_extension, movement_state_component)
-			end
-			if spread_settings and shooting_status_component then
-				local randomized_spread = spread_settings.randomized_spread or {}
-				local min_spread_ratio = randomized_spread.min_ratio or 0.25
-				local random_spread_ratio = randomized_spread.random_ratio or 0.75
-				local first_shot = shooting_status_component.num_shots == 0
-				if first_shot then
-					min_spread_ratio = randomized_spread.first_shot_min_ratio or 0.25
-					random_spread_ratio = randomized_spread.first_shot_random_ratio or 0.4
-				end
-				local multiplier = min_spread_ratio + random_spread_ratio
-				pitch = pitch * multiplier
-				yaw = yaw * multiplier
-			end
-		end
-
-		return yaw, pitch
-	end
-end
 
 mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
 	local handler_data = self._registered_components[id]
