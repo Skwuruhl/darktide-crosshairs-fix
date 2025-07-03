@@ -14,10 +14,10 @@ return {
 		ru = "Crosshairs Fix - Исправление перекрестий, чтобы они отображали фактический разброс с учётом вашего поля зрения.",
 		["zh-cn"] = "修复准星，在考虑 FOV 因素的情况下，使其准确反映武器散布范围。",
 	},
-	shotshell_spread_alpha_title = {
-		en = "Shotshell Spread Crosshair Alpha",
+	shotshell_spread_crosshair_center_title = {
+		en = "Center Shotshell Spread Crosshair Alignment",
 	},
-	shotshell_spread_alpha_tooltip = {
-		en = "Alpha controls the opacity/transparency.",
+	shotshell_spread_crosshair_center_tooltip = {
+		en = "Toggles whether spread crosshairs are aligned to the center or perimeter of the shotshell.",
 	},
 }

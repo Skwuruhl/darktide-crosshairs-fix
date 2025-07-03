@@ -26,7 +26,13 @@ local template_paths = {
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide",
 }
 
+mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
 mod.shotshells = {}
+
+mod.on_setting_changed = function()
+	mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
+end
+
 --supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
 --minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional. Don't forget to include half crosshair here as well.
 --texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. e.g. If you add 90 deg to _crosshair_segment() to rotate the texture, then pass 90 deg to texture rotation so it undoes the rotation for the purposes of crosshair placement
@@ -48,8 +54,6 @@ mod.get_active_shotshell = function()
 	end
 end
 
-mod.on_setting_changed = function()
-	mod.shotshell_spread_alpha = mod:get("shotshell_spread_alpha")
 mod.shotshell_spread_yaw_pitch = function(apply_fov)
 	apply_fov = apply_fov == nil or apply_fov
 	local shotshell = mod.get_active_shotshell()

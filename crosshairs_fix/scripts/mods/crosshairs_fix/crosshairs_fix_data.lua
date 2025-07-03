@@ -7,12 +7,12 @@ return {
 	options = {
 		widgets = {
 			{
-				setting_id = "shotshell_spread_alpha",
-				type = "numeric",
-				title = "shotshell_spread_alpha_title",
-				tooltip = "shotshell_spread_alpha_tooltip",
-				default_value = 255,
-				range = {0, 255},
+				setting_id = "shotshell_spread_crosshair_center",
+				type = "checkbox",
+				title = "shotshell_spread_crosshair_center_title",
+				tooltip = "shotshell_spread_crosshair_center_tooltip",
+				default_value = true,
+			},
 			},
 		},
 	},
