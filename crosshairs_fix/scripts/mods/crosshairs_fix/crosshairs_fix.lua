@@ -230,7 +230,7 @@ mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget
 		local spread_offset_y = pitch * scalar
 		local spread_offset_x = yaw * scalar
 		local styles = {style.top, style.bottom, style.left, style.right}
-		for k,v in pairs(styles) do
+		for _,v in ipairs(styles) do
 			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
 			v.offset[1], v.offset[2] = mod.crosshair_rotation(spread_offset_x, spread_offset_y, v.angle, half_size_x, half_size_x+half_size_y)
 		end
@@ -241,7 +241,7 @@ end)
 
 mod:hook_safe("HudElementCrosshair", "init", function(self, parent, draw_layer, start_scale, definitions)
 	local scenegraph_id = "pivot"
-	for _, template_path in pairs(template_paths) do
+	for _, template_path in ipairs(template_paths) do
 		local template = mod:io_dofile(template_path)
 		local name = template.name
 		self._crosshair_templates[name] = template
