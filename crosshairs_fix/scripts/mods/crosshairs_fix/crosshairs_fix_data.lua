@@ -13,6 +13,12 @@ return {
 				tooltip = "shotshell_spread_crosshair_center_tooltip",
 				default_value = true,
 			},
+			{
+				setting_id = "shotshell_spread_crosshair_disable",
+				type = "checkbox",
+				title = "shotshell_spread_crosshair_disable_title",
+				tooltip = "shotshell_spread_crosshair_disable_tooltip",
+				default_value = false,
 			},
 		},
 	},

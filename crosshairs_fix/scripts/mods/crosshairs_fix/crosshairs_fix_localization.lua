@@ -20,4 +20,10 @@ return {
 	shotshell_spread_crosshair_center_tooltip = {
 		en = "Toggles whether spread crosshairs are aligned to the center or perimeter of the shotshell.",
 	},
+	shotshell_spread_crosshair_disable_title = {
+		en = "Disable Spread Crosshairs",
+	},
+	shotshell_spread_crosshair_disable_tooltip = {
+		en = "Spread will instead be added to the shotshell crosshairs.",
+	}
 }

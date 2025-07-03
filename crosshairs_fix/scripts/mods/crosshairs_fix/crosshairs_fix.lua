@@ -24,13 +24,17 @@ end
 local template_paths = {
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide",
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_no_spread",
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide_no_spread",
 }
 
 mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
+mod.shotshell_spread_crosshair_disable = mod:get("shotshell_spread_crosshair_disable")
 mod.shotshells = {}
 
 mod.on_setting_changed = function()
 	mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
+	mod.shotshell_spread_crosshair_disable = mod:get("shotshell_spread_crosshair_disable")
 end
 
 --supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
@@ -257,9 +261,9 @@ mod:hook("HudElementCrosshair", "_get_current_crosshair_type", function(func, se
 	local crosshair_type = func(self, crosshair_settings)
 	if mod.get_active_shotshell() then
 		if crosshair_type == "shotgun" then
-			return "shotshell"
+			return mod.shotshell_spread_crosshair_disable and "shotshell_no_spread" or "shotshell"
 		elseif crosshair_type == "shotgun_wide" then
-			return "shotshell_wide"
+			return mod.shotshell_spread_crosshair_disable and "shotshell_wide_no_spread" or "shotshell_wide"
 		end
 	end
 	return crosshair_type
