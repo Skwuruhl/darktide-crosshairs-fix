@@ -26,6 +26,7 @@ local template_paths = {
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide",
 }
 
+mod.shotshells = {}
 --supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
 --minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional. Don't forget to include half crosshair here as well.
 --texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. e.g. If you add 90 deg to _crosshair_segment() to rotate the texture, then pass 90 deg to texture rotation so it undoes the rotation for the purposes of crosshair placement
@@ -40,10 +41,10 @@ mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offs
 end
 
 mod.get_active_shotshell = function()
-	if mod.inventory_slot_component and mod.inventory_slot_component.special_active and mod.shotshell_special then
-		return mod.shotshell_special
+	if mod.inventory_slot_component and mod.inventory_slot_component.special_active then
+		return mod.shotshells.shotshell_special
 	else
-		return mod.shotshell
+		return mod.shotshells.shotshell
 	end
 end
 
@@ -222,16 +223,25 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 			end
 		end
 		if fire_configuration then
-			mod.shotshell = fire_configuration.shotshell
-			mod.shotshell_special = fire_configuration.shotshell_special
-			local inventory_component = self._inventory_component
-			local wielded_slot = inventory_component.wielded_slot
-			if PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon") then
-				mod.inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
+			mod.shotshells.shotshell = fire_configuration.shotshell
+			mod.shotshells.shotshell_special = fire_configuration.shotshell_special
+			for _, shotshell in pairs(mod.shotshells) do
+				local correction = (1 + (shotshell.scatter_range or 0.1))
+				if not shotshell.no_random_roll then
+					correction = correction * math.sqrt(0.75)
+				end
+				shotshell.corrected_yaw = shotshell.spread_yaw * correction
+				shotshell.corrected_pitch = shotshell.spread_pitch * correction
 			end
 		else
-			mod.shotshell = nil
-			mod.shotshell_special = nil
+			mod.shotshells.shotshell = nil
+			mod.shotshells.shotshell_special = nil
+		end
+		local inventory_component = self._inventory_component
+		local wielded_slot = inventory_component.wielded_slot
+		if PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon") then
+			mod.inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
+		else
 			mod.inventory_slot_component = nil
 		end
 	end
@@ -280,7 +290,7 @@ end)
 
 mod:hook("HudElementCrosshair", "_get_current_crosshair_type", function(func, self, crosshair_settings)
 	local crosshair_type = func(self, crosshair_settings)
-	if mod:get_active_shotshell() then
+	if mod.get_active_shotshell() then
 		if crosshair_type == "shotgun" then
 			return "shotshell"
 		elseif crosshair_type == "shotgun_wide" then
