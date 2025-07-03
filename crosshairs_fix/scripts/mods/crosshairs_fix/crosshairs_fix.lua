@@ -50,6 +50,16 @@ end
 
 mod.on_setting_changed = function()
 	mod.shotshell_spread_alpha = mod:get("shotshell_spread_alpha")
+mod.shotshell_spread_yaw_pitch = function(apply_fov)
+	apply_fov = apply_fov == nil or apply_fov
+	local shotshell = mod.get_active_shotshell()
+	if shotshell then
+		local yaw, pitch = shotshell.corrected_yaw, shotshell.corrected_pitch
+		if apply_fov then
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+		end
+		return yaw, pitch
+	end
 end
 
 -- I don't wanna run this every frame but I don't wanna delete it so I'm commenting instead
