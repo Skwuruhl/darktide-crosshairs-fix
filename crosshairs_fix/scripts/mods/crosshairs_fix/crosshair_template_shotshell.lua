@@ -82,29 +82,27 @@ end
 template.update_function = function (parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = mod._spread_yaw_pitch_no_fov(parent, dt)
-	local shotshell = mod.get_active_shotshell()
+	local yaw, pitch = parent:_spread_yaw_pitch(dt, false)
+	local shotshell_yaw, shotshell_pitch = mod.shotshell_spread_yaw_pitch(false)
 
-	if yaw and pitch and shotshell then
-		local scalar = SPREAD_DISTANCE * (crosshair_settings.spread_scalar or 1)
-		local scatter_range = (1 + (shotshell.scatter_range or 0.1))
-		local shotshell_pitch, shotshell_yaw = shotshell.spread_pitch * scatter_range, shotshell.spread_yaw * scatter_range
-		if not shotshell.no_random_roll then
-			shotshell_pitch, shotshell_yaw = shotshell_pitch * math.sqrt(0.75), shotshell_yaw * math.sqrt(0.75)
+	if yaw and pitch and shotshell_yaw and shotshell_pitch then
+		if mod.shotshell_spread_crosshair_center then
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+		else
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch+shotshell_pitch, yaw+shotshell_yaw)
 		end
-		pitch, yaw = Fov.apply_fov_to_crosshair(pitch+shotshell_pitch, yaw+shotshell_yaw)
-		shotshell_pitch, shotshell_yaw = Fov.apply_fov_to_crosshair(shotshell_pitch, shotshell_yaw)
-		local spread_offset_y = pitch * scalar
-		local spread_offset_x = yaw * scalar
-		local shotshell_offset_y = shotshell_pitch * SPREAD_DISTANCE
-		local shotshell_offset_x = shotshell_yaw * SPREAD_DISTANCE
+		local spread_offset_y = pitch * SPREAD_DISTANCE
+		local spread_offset_x = yaw * SPREAD_DISTANCE
 		local spread_styles = {style.top, style.bottom, style.left, style.right}
-		local shotshell_styles = {style.shotshell_top, style.shotshell_bottom, style.shotshell_left, style.shotshell_right}
-		for _,v in pairs(spread_styles) do
+		for _,v in ipairs(spread_styles) do
 			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
 			v.offset[1], v.offset[2] = mod.crosshair_rotation(spread_offset_x, spread_offset_y, v.angle, half_size_x, half_size_x+half_size_y)
 		end
-		for _,v in pairs(shotshell_styles) do
+		shotshell_pitch, shotshell_yaw = Fov.apply_fov_to_crosshair(shotshell_pitch, shotshell_yaw)
+		local shotshell_offset_y = shotshell_pitch * SPREAD_DISTANCE
+        local shotshell_offset_x = shotshell_yaw * SPREAD_DISTANCE
+		local shotshell_styles = {style.shotshell_top, style.shotshell_bottom, style.shotshell_left, style.shotshell_right}
+		for _,v in ipairs(shotshell_styles) do
 			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
 			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, 0, half_size_x, math.rad(90))
 		end
