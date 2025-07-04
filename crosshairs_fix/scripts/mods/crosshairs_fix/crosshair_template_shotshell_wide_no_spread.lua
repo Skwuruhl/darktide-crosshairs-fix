@@ -7,6 +7,7 @@ local template = {
 	name = "shotshell_wide_no_spread",
 }
 local SPREAD_DISTANCE = 10
+local TEXTURE_ROTATION = math.rad(-90)
 
 local function _shotshell_crosshair_segment(style_id, angle)
 	return table.clone({
@@ -41,8 +42,8 @@ template.create_widget_defintion = function (template, scenegraph_id)
 		Crosshair.weakspot_hit_indicator_segment("bottom_left"),
 		Crosshair.weakspot_hit_indicator_segment("top_right"),
 		Crosshair.weakspot_hit_indicator_segment("bottom_right"),
-		_shotshell_crosshair_segment("shotshell_left", math.rad(90)),
-		_shotshell_crosshair_segment("shotshell_right", math.rad(-90)),
+		_shotshell_crosshair_segment("shotshell_right", math.rad(0)+TEXTURE_ROTATION),
+		_shotshell_crosshair_segment("shotshell_left", math.rad(180)+TEXTURE_ROTATION),
 	}, scenegraph_id)
 end
 
@@ -63,7 +64,7 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
 		local shotshell_styles = {style.shotshell_left, style.shotshell_right}
 		for _,v in ipairs(shotshell_styles) do
 			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
-			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, 0, half_size_x, math.rad(90))
+			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, 0, half_size_x, TEXTURE_ROTATION)
 		end
 	end
 
