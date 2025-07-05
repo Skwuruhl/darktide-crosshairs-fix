@@ -41,7 +41,7 @@ end
 --minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional. Don't forget to include half crosshair here as well.
 --texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. e.g. If you add 90 deg to _crosshair_segment() to rotate the texture, then pass 90 deg to texture rotation so it undoes the rotation for the purposes of crosshair placement
 --As usual for lua all angles should be supplied in radians.
---angle is per a unit circle. e.g. 0° is the right side and rotation is counter clockwise. Vanilla style names might be misnamed but the angle is the important bit so it works fine.
+--angle is per a unit circle. i.e. 0° is the right side and rotation is counter clockwise. Vanilla style names might be misnamed but the angle is the important bit so it works fine.
 mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 	minimum_offset = minimum_offset or 0
 	texture_rotation = texture_rotation or 0
