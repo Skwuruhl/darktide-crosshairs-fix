@@ -226,7 +226,7 @@ mod:hook(Fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
 	return pitch, yaw
 end)
 
---assault is the only template that has a multiplier of 15 instead of 10.
+--assault is the only basic template that has a multiplier of 15 instead of 10.
 --I tried to fix this without hook_origin but I couldn't get it to work. Only thing this hook changes is SPREAD_DISTANCE 15 to 10
 mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
