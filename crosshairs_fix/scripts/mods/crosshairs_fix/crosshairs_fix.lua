@@ -117,6 +117,50 @@ end
 -- 	end
 -- end
 
+mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
+	local handler_data = self._registered_components[id]
+	local component = handler_data.component
+	local weapon_template = WeaponTemplate.current_weapon_template(component)
+	if weapon_template then
+		local actions = weapon_template.actions
+		local fire_configuration
+		for k,v in pairs(action_settings.allowed_chain_actions or {}) do
+			if string.find(k,"shoot") then
+				fire_configuration = actions[v.action_name].fire_configuration
+				break
+			end
+		end
+		if not fire_configuration then
+			local fallback_action = actions.action_shoot_hip
+			if fallback_action then
+				fire_configuration = fallback_action.fire_configuration
+			end
+		end
+		if fire_configuration then
+			mod.shotshells.shotshell = fire_configuration.shotshell
+			mod.shotshells.shotshell_special = fire_configuration.shotshell_special
+			for _, shotshell in pairs(mod.shotshells) do
+				local correction = (1 + (shotshell.scatter_range or 0.1))
+				if not shotshell.no_random_roll then
+					correction = correction * math.sqrt(0.75)
+				end
+				shotshell.corrected_yaw = shotshell.spread_yaw * correction
+				shotshell.corrected_pitch = shotshell.spread_pitch * correction
+			end
+		else
+			mod.shotshells.shotshell = nil
+			mod.shotshells.shotshell_special = nil
+		end
+		local inventory_component = self._inventory_component
+		local wielded_slot = inventory_component.wielded_slot
+		if PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon") then
+			mod.inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
+		else
+			mod.inventory_slot_component = nil
+		end
+	end
+end)
+
 mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, apply_fov)
 	apply_fov = apply_fov == nil or apply_fov
 	local parent = self._parent
@@ -169,50 +213,6 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 		end
 
 		return yaw, pitch
-	end
-end)
-
-mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
-	local handler_data = self._registered_components[id]
-	local component = handler_data.component
-	local weapon_template = WeaponTemplate.current_weapon_template(component)
-	if weapon_template then
-		local actions = weapon_template.actions
-		local fire_configuration
-		for k,v in pairs(action_settings.allowed_chain_actions or {}) do
-			if string.find(k,"shoot") then
-				fire_configuration = actions[v.action_name].fire_configuration
-				break
-			end
-		end
-		if not fire_configuration then
-			local fallback_action = actions.action_shoot_hip
-			if fallback_action then
-				fire_configuration = fallback_action.fire_configuration
-			end
-		end
-		if fire_configuration then
-			mod.shotshells.shotshell = fire_configuration.shotshell
-			mod.shotshells.shotshell_special = fire_configuration.shotshell_special
-			for _, shotshell in pairs(mod.shotshells) do
-				local correction = (1 + (shotshell.scatter_range or 0.1))
-				if not shotshell.no_random_roll then
-					correction = correction * math.sqrt(0.75)
-				end
-				shotshell.corrected_yaw = shotshell.spread_yaw * correction
-				shotshell.corrected_pitch = shotshell.spread_pitch * correction
-			end
-		else
-			mod.shotshells.shotshell = nil
-			mod.shotshells.shotshell_special = nil
-		end
-		local inventory_component = self._inventory_component
-		local wielded_slot = inventory_component.wielded_slot
-		if PlayerUnitVisualLoadout.is_slot_of_type(wielded_slot, "weapon") then
-			mod.inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
-		else
-			mod.inventory_slot_component = nil
-		end
 	end
 end)
 
