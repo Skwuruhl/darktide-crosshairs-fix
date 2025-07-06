@@ -4,6 +4,8 @@ Darktide 1.4 fixed most issues with crosshairs but a few remain. Mod fixes remai
 
 Now includes shotshell pellet patterns. You can customize how spread is displayed with shotshell weapons via mod options.
 
+Basic flamer support. It's not perfect but much more accurate than vanilla (and scales with FOV).
+
 The mod has a function that custom crosshairs can use to properly have diagonal segments (e.g. through crosshair remap). Additionally other mods can also read the active shotshell and shotshell spread via a function. 
 
 [Nexus Mods](https://www.nexusmods.com/warhammer40kdarktide/mods/36)
