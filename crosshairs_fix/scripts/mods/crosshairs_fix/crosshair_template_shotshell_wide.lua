@@ -88,7 +88,7 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
 		if mod.shotshell_spread_crosshair_center then
 			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
 		else
-			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw+shotshell_yaw)
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw+shotshell_yaw) -- horizontal shotshell actually still has equal yaw and pitch, it just uses no_random to make it horizontal. So don't add shotshell_pitch here.
 		end
 		local scalar = SPREAD_DISTANCE * (crosshair_settings.spread_scalar or 1)
 		local spread_offset_y = pitch * scalar
@@ -103,8 +103,8 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
         local shotshell_offset_x = shotshell_yaw * SPREAD_DISTANCE
 		local shotshell_styles = {style.shotshell_right, style.shotshell_left}
 		for _,v in ipairs(shotshell_styles) do
-			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
-			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, 0, half_size_x, TEXTURE_ROTATION)
+			local half_size_x, quarter_size_y = v.size[1]/2, v.size[2]/4
+			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, quarter_size_y, quarter_size_y+half_size_x, TEXTURE_ROTATION)
 		end
 	end
 

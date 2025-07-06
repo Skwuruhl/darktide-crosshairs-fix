@@ -60,13 +60,13 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
 	local shotshell_yaw, shotshell_pitch = mod.shotshell_spread_yaw_pitch(false)
 
 	if yaw and pitch and shotshell_yaw and shotshell_pitch then
-		shotshell_pitch, shotshell_yaw = Fov.apply_fov_to_crosshair(pitch+shotshell_pitch, yaw+shotshell_yaw)
+		shotshell_pitch, shotshell_yaw = Fov.apply_fov_to_crosshair(pitch+shotshell_pitch, yaw+shotshell_yaw) -- add spread yaw and pitch bc no other spread indicators
 		local shotshell_offset_y = shotshell_pitch * SPREAD_DISTANCE
         local shotshell_offset_x = shotshell_yaw * SPREAD_DISTANCE
 		local shotshell_styles = {style.shotshell_right, style.shotshell_top, style.shotshell_left, style.shotshell_bottom}
 		for _,v in ipairs(shotshell_styles) do
-			local half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
-			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, 0, half_size_x, TEXTURE_ROTATION)
+			local half_size_x, quarter_size_y = v.size[1]/2, v.size[2]/4
+			v.offset[1], v.offset[2] = mod.crosshair_rotation(shotshell_offset_x, shotshell_offset_y, v.angle, quarter_size_y, quarter_size_y+half_size_x, TEXTURE_ROTATION)
 		end
 	end
 
