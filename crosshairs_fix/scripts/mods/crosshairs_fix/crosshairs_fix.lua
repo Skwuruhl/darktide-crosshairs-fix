@@ -190,10 +190,7 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 			local weapon_extension = player_extensions.weapon
 			local movement_state_component = unit_data_extension:read_component("movement_state")
 			local shooting_status_component = unit_data_extension:read_component("shooting_status")
-			local spread_settings
-			if weapon_extension and movement_state_component then
-				spread_settings = _spread_settings(weapon_extension, movement_state_component)
-			end
+			local spread_settings = (weapon_extension and movement_state_component) and _spread_settings(weapon_extension, movement_state_component)
 			if spread_settings and shooting_status_component then
 				local randomized_spread = spread_settings.randomized_spread or {}
 				local min_spread_ratio = randomized_spread.min_ratio or 0.25
