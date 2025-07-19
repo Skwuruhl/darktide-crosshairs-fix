@@ -11,7 +11,7 @@ return {
 	},
 	shotshell_spread_crosshair_center_title = {
 		en = "Center Shotshell Spread Crosshair Alignment",
-		ru = "Выравнивание перекрестья по центру зоны разброса дроби",
+		ru = "Центрирование расширения прицела по зоне разброса дроби",
 	},
 	shotshell_spread_crosshair_center_tooltip = {
 		en = "Toggles whether spread crosshairs are aligned to the center or perimeter of the shotshell.",
@@ -19,10 +19,10 @@ return {
 	},
 	shotshell_spread_crosshair_disable_title = {
 		en = "Disable Spread Crosshairs",
-		ru = "Отключить разброс прицелов",
+		ru = "Отключить расширение прицелов",
 	},
 	shotshell_spread_crosshair_disable_tooltip = {
 		en = "Spread will instead be added to the shotshell crosshairs.",
-		ru = "Разброс теперь будет добавляться к прицелам по зоне разброса дроби.",
+		ru = "Расширение теперь будет добавляться к прицелам по зоне разброса дроби.",
 	}
 }
