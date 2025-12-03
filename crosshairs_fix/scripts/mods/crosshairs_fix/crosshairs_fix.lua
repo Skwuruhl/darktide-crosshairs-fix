@@ -9,14 +9,14 @@ local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/
 local assault = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault")
 local flamer = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_flamer")
 
-local function _spread_settings(weapon_extension, movement_state_component)
+local function _spread_settings(weapon_extension, movement_state_component, locomotion_component, inair_state_component)
 	local spread_template = weapon_extension:spread_template()
 
 	if not spread_template then
 		return nil
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local spread_settings = spread_template[weapon_movement_state]
 
 	return spread_settings
@@ -190,8 +190,10 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 			pitch, yaw = Suppression.apply_suppression_offsets_to_spread(suppression_component, pitch, yaw)
 			local weapon_extension = player_extensions.weapon
 			local movement_state_component = unit_data_extension:read_component("movement_state")
+			local locomotion_component = unit_data_extension:read_component("locomotion")
+			local inair_state_component = unit_data_extension:read_component("inair_state")
 			local shooting_status_component = unit_data_extension:read_component("shooting_status")
-			local spread_settings = (weapon_extension and movement_state_component) and _spread_settings(weapon_extension, movement_state_component)
+			local spread_settings = (weapon_extension and movement_state_component and locomotion_component and inair_state_component) and _spread_settings(weapon_extension, movement_state_component, locomotion_component, inair_state_component)
 			if spread_settings and shooting_status_component then
 				local randomized_spread = spread_settings.randomized_spread or {}
 				local min_spread_ratio = randomized_spread.min_ratio or 0.25
