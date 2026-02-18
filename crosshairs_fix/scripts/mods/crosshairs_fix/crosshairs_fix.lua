@@ -118,6 +118,7 @@ end
 -- 	end
 -- end
 
+local SQRT_075 = math.sqrt(0.75)
 mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
@@ -140,10 +141,12 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 		if fire_configuration then
 			mod.shotshells.shotshell = fire_configuration.shotshell
 			mod.shotshells.shotshell_special = fire_configuration.shotshell_special
+			local correction
 			for _, shotshell in pairs(mod.shotshells) do
-				local correction = (1 + (shotshell.scatter_range or 0.1))
-				if not shotshell.no_random_roll then
-					correction = correction * math.sqrt(0.75)
+				if shotshell.no_random_roll then
+					correction = 1
+				else
+					correction = SQRT_075
 				end
 				shotshell.corrected_yaw = shotshell.spread_yaw * correction
 				shotshell.corrected_pitch = shotshell.spread_pitch * correction
