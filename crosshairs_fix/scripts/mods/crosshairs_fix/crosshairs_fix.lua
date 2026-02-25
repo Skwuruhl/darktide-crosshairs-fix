@@ -163,13 +163,6 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 				pitch = pitch * multiplier
 				yaw = yaw * multiplier
 			end
-			local size_of_flame_template = weapon_extension and weapon_extension:size_of_flame_template()
-			if size_of_flame_template then
-				yaw = (size_of_flame_template.spread_angle or yaw)
-				pitch = (size_of_flame_template.spread_angle or pitch)
-			end
-			if apply_fov then
-				pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
 
 			-- potential feature: some weapons have a max_delta for spread which is used in _rotation_from_offset()
 			-- The game tracks the currently rolled spread offsets, and the previous shot's final offsets.
