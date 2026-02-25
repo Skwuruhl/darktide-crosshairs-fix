@@ -6,6 +6,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
+local SQRT_075 = math.sqrt(0.75)
 
 local function _spread_settings(weapon_extension, movement_state_component, locomotion_component, inair_state_component)
 	local spread_template = weapon_extension:spread_template()
@@ -59,14 +60,10 @@ mod.get_active_shotshell = function()
 	end
 end
 
-mod.shotshell_spread_yaw_pitch = function(apply_fov)
-	apply_fov = apply_fov == nil or apply_fov
+mod.shotshell_spread_yaw_pitch = function()
 	local shotshell = mod.get_active_shotshell()
 	if shotshell then
-		local yaw, pitch = shotshell.corrected_yaw, shotshell.corrected_pitch
-		if apply_fov then
-			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
-		end
+		local pitch, yaw = Fov.apply_fov_to_crosshair(shotshell.corrected_pitch, shotshell.corrected_yaw)
 		return yaw, pitch
 	end
 end
@@ -165,8 +162,9 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 	end
 end)
 
-mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, apply_fov)
-	apply_fov = apply_fov == nil or apply_fov
+mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, add_shotshell_yaw, add_shotshell_pitch) -- for whatever reason every vanilla call of _spread_yaw_pitch passes dt but it is unused, hence _
+	add_shotshell_yaw = add_shotshell_yaw == nil or add_shotshell_yaw -- if no parameter is passed (as will be for all vanilla crosshairs) then default to True)
+	add_shotshell_pitch = add_shotshell_pitch == nil or add_shotshell_pitch -- separate parameters for horizontal shotguns
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 
@@ -217,7 +215,19 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 			end
 			if apply_fov then
 				pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+			local shotshell = mod.get_active_shotshell()
+			if shotshell then
+				yaw = yaw + (add_shotshell_yaw and shotshell.corrected_yaw or 0)
+				pitch = pitch + (add_shotshell_pitch and shotshell.corrected_pitch or 0)
+			else
+				local size_of_flame_template = weapon_extension and weapon_extension:size_of_flame_template()
+				if size_of_flame_template then -- TODO: flamer uses target_style for hipfire but uniform_circle for braced.
+					local spread_angle = size_of_flame_template.spread_angle
+					yaw = (spread_angle or yaw)
+					pitch = (spread_angle or pitch)
+				end
 			end
+			pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
 		end
 
 		return yaw, pitch
