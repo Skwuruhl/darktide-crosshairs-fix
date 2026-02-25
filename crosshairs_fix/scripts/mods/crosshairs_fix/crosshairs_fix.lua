@@ -24,10 +24,10 @@ end
 local template_paths = {
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_assault",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_flamer",
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotgun",
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotgun_wide",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide",
-	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_no_spread",
-	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide_no_spread",
 }
 
 mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
