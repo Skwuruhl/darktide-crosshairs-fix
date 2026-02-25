@@ -6,8 +6,6 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
-local assault = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_assault")
-local flamer = require("scripts/ui/hud/elements/crosshair/templates/crosshair_template_flamer")
 
 local function _spread_settings(weapon_extension, movement_state_component, locomotion_component, inair_state_component)
 	local spread_template = weapon_extension:spread_template()
@@ -23,6 +21,8 @@ local function _spread_settings(weapon_extension, movement_state_component, loco
 end
 
 local template_paths = {
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_assault",
+	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_flamer",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_wide",
 	"crosshairs_fix/scripts/mods/crosshairs_fix/crosshair_template_shotshell_no_spread",
@@ -232,51 +232,6 @@ mod:hook(Fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
 	yaw = yaw and yaw * correction
 
 	return pitch, yaw
-end)
-
---assault is the only basic template that has a multiplier of 15 instead of 10.
---I tried to fix this without hook_origin but I couldn't get it to work. Only thing this hook changes is SPREAD_DISTANCE 15 to 10
-mod:hook_origin(assault, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
-	local style = widget.style
-	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = parent:_spread_yaw_pitch(dt)
-
-	if yaw and pitch then
-		local scalar = 10 * (crosshair_settings.spread_scalar or 1)
-		local spread_offset_y = pitch * scalar
-		local spread_offset_x = yaw * scalar
-		local styles = {style.top, style.bottom, style.left, style.right}
-		local half_size_x, half_size_y, min_offset
-		for _,v in ipairs(styles) do
-			half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
-			min_offset = half_size_x + half_size_y
-			v.offset[1], v.offset[2] = mod.crosshair_rotation(spread_offset_x, spread_offset_y, v.angle, half_size_x, min_offset)
-		end
-	end
-
-	Crosshair.update_hit_indicator(style, hit_progress, hit_color, hit_weakspot, draw_hit_indicator)
-end)
-
-mod:hook_origin(flamer, "update_function", function(parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
-	local style = widget.style
-	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = parent:_spread_yaw_pitch(dt)
-
-	if yaw and pitch then
-		local scalar = 10 * (crosshair_settings.spread_scalar or 1)
-		local spread_offset_y = pitch * scalar
-		local spread_offset_x = pitch * scalar
-		local TEXTURE_ROTATION = math.rad(-90)
-		local styles = {style.right, style.left}
-		local half_size_x, half_size_y, min_offset
-		for _,v in ipairs(styles) do
-			half_size_x, half_size_y = v.size[1]/2, v.size[2]/2
-			min_offset = half_size_x + half_size_y
-			v.offset[1], v.offset[2] = mod.crosshair_rotation(spread_offset_x, spread_offset_y, v.angle, half_size_y, min_offset, TEXTURE_ROTATION)
-		end
-	end
-
-	Crosshair.update_hit_indicator(style, hit_progress, hit_color, hit_weakspot, draw_hit_indicator)
 end)
 
 mod:hook_safe("HudElementCrosshair", "init", function(self, parent, draw_layer, start_scale, definitions)
