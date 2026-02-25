@@ -211,7 +211,9 @@ end)
 
 mod:hook("HudElementCrosshair", "_get_current_crosshair_type", function(func, self, crosshair_settings)
 	local crosshair_type = func(self, crosshair_settings)
+	if mod.shotshell_spread_crosshair_enable and mod.get_active_shotshell() then
 		if crosshair_type == "shotgun" then
+			return "shotshell"
 		elseif crosshair_type == "shotgun_wide" then
 			return "shotshell_wide"
 		end
