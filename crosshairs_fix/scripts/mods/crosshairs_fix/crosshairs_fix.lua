@@ -39,11 +39,11 @@ mod.on_setting_changed = function()
 	mod.shotshell_spread_crosshair_enable = not mod:get("shotshell_spread_crosshair_disable")
 end
 
---supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
---minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional. Don't forget to include half crosshair here as well.
---texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. e.g. If you add 90 deg to _crosshair_segment() to rotate the texture, then pass 90 deg to texture rotation so it undoes the rotation for the purposes of crosshair placement
---As usual for lua all angles should be supplied in radians.
---angle is per a unit circle. i.e. 0° is the right side and rotation is counter clockwise. Vanilla style names might be misnamed but the angle is the important bit so it works fine.
+-- supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
+-- minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional. Don't forget to include half crosshair here as well.
+-- texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. e.g. If you add 90 deg to _crosshair_segment() to rotate the texture, then pass 90 deg to texture_rotation so it undoes the rotation for the purposes of crosshair placement
+-- As usual for lua all angles should be supplied in radians.
+-- angle is per a unit circle. i.e. 0° is the right side and rotation is counter clockwise. Vanilla style names might be misnamed but the angle is the important bit so it works fine.
 mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 	minimum_offset = minimum_offset or 0
 	texture_rotation = texture_rotation or 0
@@ -68,54 +68,7 @@ mod.shotshell_spread_yaw_pitch = function()
 	end
 end
 
--- I don't wanna run this every frame but I don't wanna delete it so I'm commenting instead
--- mod.get_active_shotshell = function(unit_data_extension)
--- 	if not unit_data_extension then
--- 		local player = Managers.player:local_player_safe(1)
--- 		if player then
--- 			unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
--- 		end
--- 	end
--- 	local weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
--- 	if weapon_action_component then
--- 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
--- 		if weapon_template then
--- 			local current_action_name, action_settings = Action.current_action(weapon_action_component, weapon_template)
--- 			mod:echo(current_action_name ~= "none" and action_settings.name or "no_action")
--- 			local fire_configuration
--- 			if current_action_name ~= "none" then
--- 				for k,v in pairs(action_settings.allowed_chain_actions) do
--- 					if string.find(k, "shoot") then
--- 						fire_configuration = weapon_template.actions[v.action_name].fire_configuration
--- 						break
--- 					end
--- 				end
--- 			end
--- 			if not fire_configuration then
--- 				local fallback_action = weapon_template.actions.action_shoot_hip
--- 				if fallback_action then
--- 					fire_configuration = fallback_action.fire_configuration
--- 				end
--- 			end
--- 			if fire_configuration then
--- 				local inventory_component = unit_data_extension:read_component("inventory")
--- 				local wielded_slot = inventory_component.wielded_slot
--- 				local slot_type = PlayerCharacterConstants.slot_configuration[wielded_slot].slot_type
--- 				if slot_type == "weapon" then
--- 					local inventory_slot_component = unit_data_extension:read_component(inventory_component.wielded_slot)
--- 					mod:echo(inventory_slot_component.special_active)
--- 					if inventory_slot_component.special_active then
--- 						return fire_configuration.shotshell_special
--- 					else
--- 						return fire_configuration.shotshell
--- 					end
--- 				end
--- 			end
--- 		end
--- 	end
--- end
-
-local SQRT_075 = math.sqrt(0.75)
+-- Tracking allowed chainable actions was the only way I could find to track the shotshell that the next fired shot will use
 mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo_override)
 	local handler_data = self._registered_components[id]
 	local component = handler_data.component
@@ -123,13 +76,13 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 	if weapon_template then
 		local actions = weapon_template.actions
 		local fire_configuration
-		for k,v in pairs(action_settings.allowed_chain_actions or {}) do
+		for k,v in pairs(action_settings.allowed_chain_actions or {}) do -- actions are named somewhat inconsistently so I just have to check all of them for the shoot.
 			if string.find(k,"shoot") then
 				fire_configuration = actions[v.action_name].fire_configuration
 				break
 			end
 		end
-		if not fire_configuration then
+		if not fire_configuration then -- If an action doesn't define chain actions then it defaults to hipfire
 			local fallback_action = actions.action_shoot_hip
 			if fallback_action then
 				fire_configuration = fallback_action.fire_configuration
@@ -189,6 +142,8 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 			end
 
 			pitch, yaw = Suppression.apply_suppression_offsets_to_spread(suppression_component, pitch, yaw)
+
+			-- PlayerUnitWeaponSpreadExtension.randomized_spread applies additional scalars to spread that spread_component doesn't include.
 			local weapon_extension = player_extensions.weapon
 			local movement_state_component = unit_data_extension:read_component("movement_state")
 			local locomotion_component = unit_data_extension:read_component("locomotion")
@@ -215,6 +170,12 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 			end
 			if apply_fov then
 				pitch, yaw = Fov.apply_fov_to_crosshair(pitch, yaw)
+
+			-- potential feature: some weapons have a max_delta for spread which is used in _rotation_from_offset()
+			-- The game tracks the currently rolled spread offsets, and the previous shot's final offsets.
+			-- A max_delta of 0.7 would mean the final trajectory will be 70% of the distance toward the currently rolled offset measured from the previous.
+			-- This could conceivably be represented by the crosshair but might not actually be very readable.
+
 			local shotshell = mod.get_active_shotshell()
 			if shotshell then
 				yaw = yaw + (add_shotshell_yaw and shotshell.corrected_yaw or 0)
@@ -234,7 +195,8 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 	end
 end)
 
---most templates multiply pitch and yaw by 10, and apply_fov_to_crosshair by 37. The result is 370 but needs to be 540, the number of pixels from center of crosshair to top of screen with a 1080p monitor.
+-- most templates multiply pitch and yaw by 10, and apply_fov_to_crosshair by 37. The result is 370 but needs to be 540, the number of pixels from center of crosshair to top of screen with a 1080p monitor.
+-- on a similar note: if you make any custom crosshairs then use a spread_distance of 10.
 mod:hook(Fov, "apply_fov_to_crosshair", function(func, pitch, yaw)
 	pitch, yaw = func(pitch, yaw)
 	local correction = 54/37
