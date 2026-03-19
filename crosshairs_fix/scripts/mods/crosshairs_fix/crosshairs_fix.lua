@@ -88,7 +88,7 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 				fire_configuration = fallback_action.fire_configuration
 			end
 		end
-		if fire_configuration then
+		if fire_configuration and fire_configuration.projectile == nil then
 			mod.shotshells.shotshell = fire_configuration.shotshell
 			mod.shotshells.shotshell_special = fire_configuration.shotshell_special
 			local correction
