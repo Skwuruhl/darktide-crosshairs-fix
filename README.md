@@ -51,12 +51,11 @@ If you want diagonal crosshairs then use the crosshair_rotation function to get 
 ## crosshair_rotation(x, y, angle, half_crosshair_size, minimum_offset, texture_rotation)
 
 * supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
-
 * half_crosshair_size is what it says. Be sure to use the correct dimension. Not optional.
-
+  * Typically half X but if you use texture_rotation then it's probably Y
 * minimum_offset is the mininum number of 1080 pixels the returned x, y should be from center. e.g. a value of 1 at an angle of 45° would set a minumum x and y value of 0.707. optional.
-
-* texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional.
-
+  * Typical minimum offset is half_x + half_y
+* texture_rotation is an optional parameter in case the crosshair texture needs additional rotation. Be sure to also adjust the crosshair segment angles as needed. optional. 
+  * Some textures are rotated 90° from how you want them to be used in the crosshair so you need to do e.g. _crosshair_segment("bottom_left", math.rad(210)+math.rad(-90)). This will orient the texture so that it's pointed the correct way for a 210° position, but now the data in the crosshair points to a 120° position. Passing math.rad(-90) to crosshair_rotation() will account for this.
 * As usual for lua all angles should be supplied in radians.
  
