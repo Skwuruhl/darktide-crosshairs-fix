@@ -53,8 +53,8 @@ mod.crosshair_rotation = function(x, y, angle, half_crosshair_size, minimum_offs
 end
 
 mod.get_active_shotshell = function()
-	if mod.inventory_slot_component and mod.inventory_slot_component.special_active then
-		return mod.shotshells.shotshell_special
+	if mod.inventory_slot_component and (mod.inventory_slot_component.special_active or (mod.anim_event_func and (mod.anim_event_func(mod.inventory_slot_component) == "attack_shoot_special"))) then
+		return mod.shotshells.shotshell_special or mod.shotshells.shotshell
 	else
 		return mod.shotshells.shotshell
 	end
@@ -89,6 +89,7 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 			end
 		end
 		if fire_configuration and fire_configuration.projectile == nil then
+			mod.anim_event_func = fire_configuration.anim_event_func
 			mod.shotshells.shotshell = fire_configuration.shotshell
 			mod.shotshells.shotshell_special = fire_configuration.shotshell_special
 			local correction
