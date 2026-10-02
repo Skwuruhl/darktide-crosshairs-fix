@@ -31,12 +31,12 @@ local template_paths = {
 }
 
 mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
-mod.shotshell_spread_crosshair_enable = not mod:get("shotshell_spread_crosshair_disable")
+mod.shotshell_spread_crosshair_enable = mod:get("shotshell_spread_crosshair_enable")
 mod.shotshells = {}
 
 mod.on_setting_changed = function()
 	mod.shotshell_spread_crosshair_center = mod:get("shotshell_spread_crosshair_center")
-	mod.shotshell_spread_crosshair_enable = not mod:get("shotshell_spread_crosshair_disable")
+	mod.shotshell_spread_crosshair_enable = mod:get("shotshell_spread_crosshair_enable")
 end
 
 -- supplied with spread_offset_x and spread_offset_y and the angle of a crosshair segment, returns x and y coordinates adjusted for the rotation.
