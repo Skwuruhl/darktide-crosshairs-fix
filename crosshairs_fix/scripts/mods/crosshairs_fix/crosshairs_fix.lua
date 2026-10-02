@@ -75,19 +75,16 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 	local weapon_template = WeaponTemplate.current_weapon_template(component)
 	if weapon_template then
 		local actions = weapon_template.actions
+		local action
 		local fire_configuration
 		for k,v in pairs(action_settings.allowed_chain_actions or {}) do -- actions are named somewhat inconsistently so I just have to check all of them for the shoot.
 			if string.find(k,"shoot") then
-				fire_configuration = actions[v.action_name].fire_configuration
+				action = actions[v.action_name]
 				break
 			end
 		end
-		if not fire_configuration then -- If an action doesn't define chain actions then it defaults to hipfire
-			local fallback_action = actions.action_shoot_hip
-			if fallback_action then
-				fire_configuration = fallback_action.fire_configuration
-			end
-		end
+		action = action or actions.action_shoot_hip -- If an action doesn't define chain actions then it defaults to hipfire
+		fire_configuration = action and action.fire_configuration
 		if fire_configuration and fire_configuration.projectile == nil then
 			mod.anim_event_func = fire_configuration.anim_event_func
 			mod.shotshells.shotshell = fire_configuration.shotshell
