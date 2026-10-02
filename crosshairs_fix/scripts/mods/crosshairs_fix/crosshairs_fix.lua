@@ -95,6 +95,9 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 			for _, shotshell in pairs(mod.shotshells) do
 				if shotshell.no_random_roll then
 					correction = 1
+					if shotshell.num_spread_circles * 2 + (shotshell.bullseye and 1 or 0) == shotshell.num_pellets then -- if shotshell_wide
+						shotshell.wide = true
+					end
 				else
 					correction = SQRT_075
 				end
@@ -115,9 +118,7 @@ mod:hook_safe("ActionHandler", "start_action", function(self, id, action_objects
 	end
 end)
 
-mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, add_shotshell_yaw, add_shotshell_pitch) -- for whatever reason every vanilla call of _spread_yaw_pitch passes dt but it is unused, hence _
-	add_shotshell_yaw = add_shotshell_yaw == nil or add_shotshell_yaw -- if no parameter is passed (as will be for all vanilla crosshairs) then default to True)
-	add_shotshell_pitch = add_shotshell_pitch == nil or add_shotshell_pitch -- separate parameters for horizontal shotguns
+mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, dt) -- for whatever reason every vanilla call of _spread_yaw_pitch passes dt but it is unused, hence _
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 
@@ -170,9 +171,9 @@ mod:hook_origin("HudElementCrosshair", "_spread_yaw_pitch", function (self, _, a
 			-- This could conceivably be represented by the crosshair but might not actually be very readable.
 
 			local shotshell = mod.get_active_shotshell()
-			if shotshell then
-				yaw = yaw + (add_shotshell_yaw and shotshell.corrected_yaw or 0)
-				pitch = pitch + (add_shotshell_pitch and shotshell.corrected_pitch or 0)
+			if shotshell and (not mod.shotshell_spread_crosshair_center) then
+				yaw = yaw + (shotshell.corrected_yaw or 0)
+				pitch = pitch + (not shotshell.wide and shotshell.corrected_pitch or 0)
 			else
 				local size_of_flame_template = weapon_extension and weapon_extension:size_of_flame_template()
 				if size_of_flame_template then -- TODO: flamer uses target_style for hipfire but uniform_circle for braced.

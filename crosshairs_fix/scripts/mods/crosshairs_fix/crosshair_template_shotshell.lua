@@ -99,7 +99,7 @@ template.update_function = function (parent, ui_renderer, widget, template, cros
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
 	local shotshell_yaw, shotshell_pitch = mod.shotshell_spread_yaw_pitch()
-	local deviation_yaw, deviation_pitch = parent:_spread_yaw_pitch(dt, not mod.shotshell_spread_crosshair_center, not mod.shotshell_spread_crosshair_center)
+	local deviation_yaw, deviation_pitch = parent:_spread_yaw_pitch(dt)
 
 	if shotshell_yaw and shotshell_pitch then
 		local spread_offset_y = shotshell_pitch * SPREAD_DISTANCE
